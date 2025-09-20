@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="ALFI">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="ALFI">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <title>ALFI</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="file-picker-web" content="enabled">
+
+  <!-- ВАЖНО: задаем renderer ДО загрузки bootstrap -->
+  <script>
+    window.flutterWebRenderer = "canvaskit";
+    // window.flutterWebRenderer = "html";
+  </script>
+
+  <!-- УДАЛЕНО из head:
+  <script src="flutter_bootstrap.js" async></script>
+  -->
+
+  <!-- Космический сплэш с звездным небом -->
+  <style>
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #ffffff;
+    }
+
+    #splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      transition: opacity .25s ease;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    /* Звездное небо */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite;
+    }
+
+    .star:nth-child(odd) {
+      animation-delay: 1s;
+    }
+
+    .star:nth-child(3n) {
+      animation-delay: 0.5s;
+    }
+
+    .star:nth-child(4n) {
+      animation-delay: 1.5s;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Улучшенный спиннер */
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #64b5f6;
+      border-right-color: #81c784;
+      animation: spin 1.5s linear infinite;
+      box-shadow: 0 0 20px rgba(100, 181, 246, 0.3);
+    }
+
+    .splash-title {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      font-size: 20px;
+      font-weight: 300;
+      opacity: 0.9;
+      margin-top: 24px;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      transition: all 0.5s ease;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Дополнительные космические эффекты */
+    .cosmic-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(100, 181, 246, 0.1) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+    }
+
+    /* Планеты на заднем плане */
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.1;
+    }
+
+    .planet1 {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5a52);
+      top: 20%;
+      right: 15%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .planet2 {
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle at 30% 30%, #4ecdc4, #44a08d);
+      bottom: 25%;
+      left: 10%;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+  </style>
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700&family=Noto+Sans+Symbols+2&family=Noto+Sans+Symbols&display=swap"> -->
+</head>
+
+<body>
+  <!-- Космический сплэш-экран до первого кадра Flutter -->
+  <div id="splash" aria-label="ALFI is Loading...">
+    <!-- Звездное небо -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Космическое свечение -->
+    <div class="cosmic-glow"></div>
+    
+    <!-- Планеты -->
+    <div class="planet planet1"></div>
+    <div class="planet planet2"></div>
+    
+    <!-- Основной контент -->
+    <div class="spinner" role="progressbar" aria-busy="true"></div>
+    <div class="splash-title" id="loadingText">Loading…</div>
+  </div>
+
+  <script>
+    // Создаем звездное небо
+    function createStars() {
+      const starsContainer = document.getElementById('stars');
+      const numberOfStars = 150;
+      
+      for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Случайные размеры звезд
+        const size = Math.random() * 3 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        
+        // Случайные позиции
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        
+        // Случайная задержка анимации
+        star.style.animationDelay = Math.random() * 2 + 's';
+        
+        starsContainer.appendChild(star);
+      }
+    }
+
+    // Определение языка браузера (аналогично Flutter коду)
+    function getBrowserLocale() {
+      const browserLanguages = [
+        ...navigator.languages.map(lang => lang.toLowerCase().split('-')[0]),
+        navigator.language.toLowerCase().split('-')[0]
+      ];
+      
+      if (browserLanguages.some(lang => lang === 'ru')) {
+        return 'ru';
+      }
+      return 'en';
+    }
+
+    // Локализованные сообщения
+    function getLocalizedMessages(locale) {
+      const messages = {
+        ru: [
+          'Загружаем звезды…',
+          'Подождите еще немного…',
+          'Готовим космическую магию…',
+          'Почти готово…'
+        ],
+        en: [
+          'Loading stars…',
+          'Please wait a bit more…',
+          'Preparing cosmic magic…',
+          'Almost ready…'
+        ]
+      };
+      
+      return messages[locale] || messages.en;
+    }
+
+    // Смена текста загрузки
+    function changeLoadingText() {
+      const loadingText = document.getElementById('loadingText');
+      const locale = getBrowserLocale();
+      const messages = getLocalizedMessages(locale);
+      
+      let currentIndex = 0;
+      
+      // Смена текста каждые 5 секунд
+      const textInterval = setInterval(() => {
+        currentIndex = (currentIndex + 1) % messages.length;
+        if (loadingText) {
+          loadingText.style.opacity = '0';
+          setTimeout(() => {
+            loadingText.textContent = messages[currentIndex];
+            loadingText.style.opacity = '0.9';
+          }, 250);
+        }
+      }, 5000);
+      
+      // Очищаем интервал при скрытии сплэша
+      return textInterval;
+    }
+
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+      createStars();
+      
+      // Устанавливаем локализованный начальный текст
+      const loadingText = document.getElementById('loadingText');
+      const locale = getBrowserLocale();
+      const messages = getLocalizedMessages(locale);
+      if (loadingText) {
+        loadingText.textContent = messages[0];
+      }
+      
+      const textInterval = changeLoadingText();
+      
+      // Сохраняем интервал для очистки
+      window.loadingTextInterval = textInterval;
+    });
+
+    // Скрываем сплэш, когда Flutter отрисует первый кадр
+    window.addEventListener('flutter-first-frame', function () {
+      const el = document.getElementById('splash');
+      if (!el) return;
+      
+      // Очищаем интервал смены текста
+      if (window.loadingTextInterval) {
+        clearInterval(window.loadingTextInterval);
+      }
+      
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 300);
+    });
+  </script>
+
+  <!-- ?? -->
+  <script>
+    // Удаляем здесь дублирование установки renderer,
+    // он уже задан в <head> выше
+    // Инициализация FilePicker для веб
+    window.addEventListener('load', function () {
+      // Создаем глобальный объект для FilePicker, если он еще не существует
+      if (!window.filePicker) {
+        window.filePicker = {
+          initialized: true,
+          // Создаем полноценный объект instance с методом _instance
+          instance: {
+            _instance: {}, // Добавляем _instance как объект
+            // Добавляем необходимые методы
+            pickFiles: function () {
+              return Promise.resolve(null);
+            }
+          }
+        };
+      }
+
+      // Отправляем событие о готовности FilePicker
+      window.dispatchEvent(new CustomEvent('filePickerReady'));
+      console.log('FilePicker web initialized');
+    });
+  </script>
+  <!-- Переносим bootstrap в конец body и используем defer -->
+  <script src="flutter_bootstrap.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Тест локализации загрузочного экрана</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .locale-info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .messages {
+            background: #f3e5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Тест локализации загрузочного экрана ALFI</h1>
+    
+    <div class="test-section">
+        <h2>Информация о языке браузера:</h2>
+        <div class="locale-info" id="localeInfo"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Сообщения для текущей локали:</h2>
+        <div class="messages" id="messages"></div>
+    </div>
+
+    <script>
+        // Копируем функции из index.html
+        function getBrowserLocale() {
+            const browserLanguages = [
+                ...navigator.languages.map(lang => lang.toLowerCase().split('-')[0]),
+                navigator.language.toLowerCase().split('-')[0]
+            ];
+            
+            if (browserLanguages.some(lang => lang === 'ru')) {
+                return 'ru';
+            }
+            return 'en';
+        }
+
+        function getLocalizedMessages(locale) {
+            const messages = {
+                ru: [
+                    'Загружаем звезды…',
+                    'Подождите еще немного…',
+                    'Готовим космическую магию…',
+                    'Почти готово…'
+                ],
+                en: [
+                    'Loading stars…',
+                    'Please wait a bit more…',
+                    'Preparing cosmic magic…',
+                    'Almost ready…'
+                ]
+            };
+            
+            return messages[locale] || messages.en;
+        }
+
+        // Отображаем информацию
+        document.addEventListener('DOMContentLoaded', function() {
+            const locale = getBrowserLocale();
+            const messages = getLocalizedMessages(locale);
+            
+            // Информация о локали
+            const localeInfo = document.getElementById('localeInfo');
+            localeInfo.innerHTML = `
+                <strong>Определенная локаль:</strong> ${locale}<br>
+                <strong>navigator.languages:</strong> ${JSON.stringify(navigator.languages)}<br>
+                <strong>navigator.language:</strong> ${navigator.language}
+            `;
+            
+            // Сообщения
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML = `
+                <strong>Сообщения для локали "${locale}":</strong><br>
+                ${messages.map((msg, i) => `${i + 1}. ${msg}`).join('<br>')}
+            `;
+        });
+    </script>
+</body>
+</html>
