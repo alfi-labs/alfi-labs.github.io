@@ -25,6 +25,99 @@
     // window.flutterWebRenderer = "html";
   </script>
 
+  <!-- cropperjs -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  
+  <!-- Настройки cropperjs для включения всех функций -->
+  <script>
+    window.cropperOptions = {
+      aspectRatio: 1,
+      viewMode: 1,
+      dragMode: 'move',
+      autoCropArea: 0.8,
+      restore: true,
+      guides: true,
+      center: true,
+      highlight: true,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      toggleDragModeOnDblclick: true,
+      rotatable: true,
+      scalable: true,
+      zoomable: true,
+      zoomOnTouch: true,
+      zoomOnWheel: true,
+      wheelZoomRatio: 0.1,
+      movable: true,
+      background: true,
+      modal: true,
+      responsive: true,
+      checkCrossOrigin: true,
+      checkOrientation: true,
+      // Дополнительные настройки для корректного отображения поворотов
+      preview: '.img-preview',
+      crop: function(event) {
+        // Обновляем превью при изменениях
+        console.log('Crop event:', event.detail);
+      },
+      ready: function() {
+        console.log('Cropper ready');
+      },
+      cropstart: function(event) {
+        console.log('Crop start:', event.detail.action);
+      },
+      cropmove: function(event) {
+        console.log('Crop move:', event.detail.action);
+      },
+      cropend: function(event) {
+        console.log('Crop end:', event.detail.action);
+      }
+    };
+    
+    // Добавляем CSS для лучшего отображения поворотов
+    const style = document.createElement('style');
+    style.textContent = `
+      .cropper-container {
+        direction: ltr;
+      }
+      
+      .cropper-canvas {
+        transition: transform 0.3s ease-in-out;
+      }
+      
+      .cropper-view-box {
+        outline: 1px solid #39f;
+        outline-color: rgba(51, 153, 255, 0.75);
+      }
+      
+      .cropper-dashed {
+        border: 0 dashed #eee;
+        display: block;
+        opacity: 0.5;
+      }
+      
+      .cropper-dashed.dashed-h {
+        border-bottom-width: 1px;
+        border-top-width: 1px;
+        height: calc(100% / 3);
+        left: 0;
+        top: calc(100% / 3);
+        width: 100%;
+      }
+      
+      .cropper-dashed.dashed-v {
+        border-left-width: 1px;
+        border-right-width: 1px;
+        height: 100%;
+        left: calc(100% / 3);
+        top: 0;
+        width: calc(100% / 3);
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
   <!-- УДАЛЕНО из head:
   <script src="flutter_bootstrap.js" async></script>
   -->
@@ -86,8 +179,17 @@
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.2); }
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
     }
 
     /* Улучшенный спиннер */
@@ -133,8 +235,17 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.6;
+      }
     }
 
     /* Планеты на заднем плане */
@@ -163,8 +274,15 @@
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-20px); }
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
     }
   </style>
   <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -177,14 +295,14 @@
   <div id="splash" aria-label="ALFI is Loading...">
     <!-- Звездное небо -->
     <div class="stars" id="stars"></div>
-    
+
     <!-- Космическое свечение -->
     <div class="cosmic-glow"></div>
-    
+
     <!-- Планеты -->
     <div class="planet planet1"></div>
     <div class="planet planet2"></div>
-    
+
     <!-- Основной контент -->
     <div class="spinner" role="progressbar" aria-busy="true"></div>
     <div class="splash-title" id="loadingText">Loading…</div>
@@ -195,23 +313,23 @@
     function createStars() {
       const starsContainer = document.getElementById('stars');
       const numberOfStars = 150;
-      
+
       for (let i = 0; i < numberOfStars; i++) {
         const star = document.createElement('div');
         star.className = 'star';
-        
+
         // Случайные размеры звезд
         const size = Math.random() * 3 + 1;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-        
+
         // Случайные позиции
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
-        
+
         // Случайная задержка анимации
         star.style.animationDelay = Math.random() * 2 + 's';
-        
+
         starsContainer.appendChild(star);
       }
     }
@@ -222,7 +340,7 @@
         ...navigator.languages.map(lang => lang.toLowerCase().split('-')[0]),
         navigator.language.toLowerCase().split('-')[0]
       ];
-      
+
       if (browserLanguages.some(lang => lang === 'ru')) {
         return 'ru';
       }
@@ -245,7 +363,7 @@
           'Almost ready…'
         ]
       };
-      
+
       return messages[locale] || messages.en;
     }
 
@@ -254,9 +372,9 @@
       const loadingText = document.getElementById('loadingText');
       const locale = getBrowserLocale();
       const messages = getLocalizedMessages(locale);
-      
+
       let currentIndex = 0;
-      
+
       // Смена текста каждые 5 секунд
       const textInterval = setInterval(() => {
         currentIndex = (currentIndex + 1) % messages.length;
@@ -268,15 +386,15 @@
           }, 250);
         }
       }, 5000);
-      
+
       // Очищаем интервал при скрытии сплэша
       return textInterval;
     }
 
     // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       createStars();
-      
+
       // Устанавливаем локализованный начальный текст
       const loadingText = document.getElementById('loadingText');
       const locale = getBrowserLocale();
@@ -284,9 +402,9 @@
       if (loadingText) {
         loadingText.textContent = messages[0];
       }
-      
+
       const textInterval = changeLoadingText();
-      
+
       // Сохраняем интервал для очистки
       window.loadingTextInterval = textInterval;
     });
@@ -295,12 +413,12 @@
     window.addEventListener('flutter-first-frame', function () {
       const el = document.getElementById('splash');
       if (!el) return;
-      
+
       // Очищаем интервал смены текста
       if (window.loadingTextInterval) {
         clearInterval(window.loadingTextInterval);
       }
-      
+
       el.style.opacity = '0';
       setTimeout(() => el.remove(), 300);
     });
