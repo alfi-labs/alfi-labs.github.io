@@ -1,0 +1,8 @@
+git status
+cd ..
+cd '/Users/xeno/dev/Dart/astro_ecosystem' ; git status
+find /Users/xeno/dev -name ".git" -type d 2>/dev/null | head -10
+cd '/Users/xeno/dev/Dart/astro_ecosystem/apps/alfi/build/web' ; git status
+git pull
+git pull --no-rebase
+exit

@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Meta-Scientific Astrology",
+  "alternateName": "MSA",
+  "author": {
+    "@type": "Person",
+    "name": "Ruslan Dzhansakov",
+    "description": "Creator of the Meta-Scientific Astrology theoretical framework."
+  },
+  "description": "A proto-scientific theory integrating quantum mechanics, process philosophy, and astrology to describe reality as a two-layered process of probability collapse.",
+  "keywords": "Astrology, Quantum Mechanics, Process Philosophy, Proto-Reality, Consensus-Reality, The Field",
+  "hasPart": [
+    {
+      "@type": "DefinedTerm",
+      "name": "The Field",
+      "termCode": "MSA-001",
+      "description": "The single, dynamic, informational foundation of all existence. Not a physical field, but a philosophical category representing the unity and process-based nature of reality (being-as-becoming)."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Proto-Reality",
+      "termCode": "MSA-002",
+      "description": "The level of pure potential of [The Field], where all outcomes exist as information in a probabilistic state (quantum superposition). Experienced directly through dreams and altered states of consciousness."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Consensus-Reality",
+      "termCode": "MSA-003",
+      "description": "The single, actual result of the continuous 'collapse' of potential into the one manifested world shared by observers. Corresponds to the waking state."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Body-Spacesuit",
+      "termCode": "MSA-004",
+      "description": "The physical body viewed as a specialized interface between non-local consciousness and the material world, tuned to specific frequencies of [The Field]."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Synchronism",
+      "termCode": "MSA-005",
+      "description": "The principle that all systems in the Universe are instinctively synchronized with the fundamental rhythms of [The Field], analogous to musicians following a conductor."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Resonant Imprint",
+      "termCode": "MSA-006",
+      "description": "The unique configuration of a system's sensitivity to [The Field]'s rhythms, fixed at the moment of its activation (birth). Represented by the natal chart."
+    },
+    {
+      "@type": "DefinedTerm",
+      "name": "Resonance",
+      "termCode": "MSA-007",
+      "description": "The dynamic activation of an internal potential when a current pattern in [The Field] matches a pattern in the system's Resonant Imprint."
+    }
+  ],
+  "educationalLevel": "Advanced",
+  "inLanguage": ["en", "ru"]
+}
